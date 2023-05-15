@@ -13,13 +13,15 @@ function [P,R,Dc] = build_2lvl_method_g5_comp(Df,dof_f,dof_c,aggr_nr_sites)
   fprintf("\teigensolving ...\n");
   if size(Df,1)==(16*16*16*16*12)
     load matrices/D16/V_top.mat;
-    load matrices/D16/V_mid.mat;
+    load matrices/D16/V_mid1.mat;
+    load matrices/D16/V_mid2.mat;
     load matrices/D16/V_low.mat;
     ni = size(V_top,1);
-    V = ones(3*ni,ntv);
+    V = ones(4*ni,ntv);
     V(1:ni,:) = V_top(:,1:ntv);
-    V(ni+1:2*ni,:) = V_mid(:,1:ntv);
-    V(2*ni+1:3*ni,:) = V_low(:,1:ntv);
+    V(ni+1:2*ni,:) = V_mid1(:,1:ntv);
+    V(2*ni+1:3*ni,:) = V_mid2(:,1:ntv);
+    V(3*ni+1:4*ni,:) = V_low(:,1:ntv);
   else
     [V,~,~] = eigs(Df,ntv,"smallestabs",'Tolerance',1.0e-4);
   end
