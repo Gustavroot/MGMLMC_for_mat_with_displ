@@ -42,13 +42,16 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
     fprintf("\tNumber of nonzero of matrix at level %d : %d\n",i,nnz(mgh.D{i}));
 
     % construction of Ptilde, which is the matrix giving the displacement on the lattice
-    % IMPORTANT : this matrix permutes the chucks/sites on a vector upwards by an
+    % IMPORTANT : this matrix permutes the chunks/sites on a vector upwards by an
     %             amount nr_displ_sites
     mgh.Ptilde{i} = sparse(nr_sites,nr_sites);
     for j=1:nr_sites
       mgh.Ptilde{i}(j,mod(j+nr_displ_sites-1,nr_sites)+1) = 1;
     end
     mgh.Ptilde{i} = kron(mgh.Ptilde{i},speye(mgh.dof(i)));
+
+    %spy(mgh.Ptilde{i});
+    %error("stop");
 
     if i==1
       load matrices/D16/GPM.mat;

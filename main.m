@@ -12,8 +12,11 @@ addpath("src/");
 filename = "matrices/D16/Dreord";
 D = get_matrix(filename);
 
-% the shift on the lattice .. as we're doing here a lattice with a displacement
-nr_displ_sites = 10;
+% the shift on the lattice .. as we're doing here a lattice with a
+% displacement. The displacement is on the second direction, that's why
+% the 16 extra factor
+%nr_displ_sites = 5*(16^3);
+nr_displ_sites = 0;
 
 % multigrid hierarchy
 nr_levels = 3;

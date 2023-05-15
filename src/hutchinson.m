@@ -5,7 +5,10 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
   fprintf("(stochs solves) ");
   for i=1:maxiter
     fprintf(".");
-    z = rand(n,1);
+
+    % Rademacher vectors
+    z = 2*randi([0 1],n,1)-1;
+
     % deflation is from the left, as we're assuming using RSVs
     if k>0
       zdefl = z - V*(V'*z);
