@@ -1,0 +1,100 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+              R2020a Update 1 (9.8.0.1359463) 64-bit (glnxa64)
+                               April 9, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Getting matrix ...
+...done
+Elapsed time : 3.297257
+
+Constructing MG hierarchy ...
+	eigensolving ...
+	... done
+	Dim of matrix at level 1 : 786432
+	Number of nonzero of matrix at level 1 : 42467328
+	eigensolving ...
+	... done
+	Dim of matrix at level 2 : 12288
+	Number of nonzero of matrix at level 2 : 5308416
+	Dim of matrix at level 3 : 768
+	Number of nonzero of matrix at level 3 : 184320
+...done
+Elapsed time : 112.674052
+
+Running tests on MG hierarchy and solver ...
+Test #1 ... [FAILED] (rel error = 1.130604e-15)
+Test #2 ... [PASSED]
+Test #3 ... [PASSED]
+Test #4 ... [FAILED] (rel error = 1.169731e-15)
+Test #5 ... [PASSED]
+Test #6 ... [FAILED] (rel eig residual = 1.516307e-14)
+Test #7 ... [PASSED]
+Test #8 ... [FAILED] (rel residual = 5.926068e-08, iters = 44, time = 3.791332)
+Test #9 ... [PASSED], number of iterations = 53, time = 80.671564
+... done
+
+Set of numerical experiments #1 : Hutchinson, lattice without displacement
+
+k = 0
+Constructing deflation vectors via BPI ...
+... done (elapsed time = 0.001978)
+Computing trace ...
+(stochs solves) .latest variance = 0.000000
+.latest variance = 1074.471281
+.latest variance = 3303.640506
+.latest variance = 3620.065584
+.latest variance = 3779.734310
+.latest variance = 6665.266414
+.latest variance = 7062.540098
+.latest variance = 6323.603110
+.latest variance = 5622.506900
+.latest variance = 5287.073844
+.latest variance = 5003.896584
+.latest variance = 7045.185954
+.latest variance = 6604.694380
+.latest variance = 7955.330400
+.latest variance = 8218.335345
+.latest variance = 7742.903585
+.latest variance = 8573.515612
+.latest variance = 8659.231005
+.latest variance = 8398.287047
+.latest variance = 8462.667281
+.latest variance = 8175.455419
+.latest variance = 8012.788061
+.latest variance = 8768.565508
+.latest variance = 8436.714583
+.latest variance = 8199.624786
+.latest variance = 8686.064850
+.latest variance = 8494.130746
+.latest variance = 8330.970743
+.latest variance = 8114.873395
+.latest variance = 7936.256513
+.latest variance = 7774.570820
+.latest variance = 7605.763857
+.latest variance = 7683.146249
+.latest variance = 7519.735832
+.latest variance = 7535.340496
+.latest variance = 7346.506419
+.latest variance = 7758.848436
+.latest variance = 7755.575143
+.latest variance = 7633.123016
+.latest variance = 8625.744825
+.latest variance = 9919.279474
+.latest variance = 9857.244754
+.latest variance = 9728.033321
+.latest variance = 9640.382751
+.latest variance = 9467.574785
+.latest variance = 9326.709372
+.latest variance = 9169.852693
+.latest variance = 9161.873132
+.latest variance = 8975.798189
+.latest variance = 8910.065494
+.latest variance = 8896.579086
+.latest variance = 8813.491575
+.latest variance = 8679.243274
+.
