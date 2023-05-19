@@ -13,17 +13,18 @@
 
 clc;clear;
 
-load V.mat;
+load Vsing.mat;
+V = Vsing;
 ni = size(V,1);
 nj = size(V,2);
 V_top = V(1:ni/4,1:nj);
 V_mid1 = V(ni/4+1:2*ni/4,1:nj);
 V_mid2 = V(2*ni/4+1:3*ni/4,1:nj);
 V_low = V(3*ni/4+1:ni,1:nj);
-save('V_top.mat','V_top');
-save('V_mid1.mat','V_mid1');
-save('V_mid2.mat','V_mid2');
-save('V_low.mat','V_low');
+save('Vsing_top.mat','V_top');
+save('Vsing_mid1.mat','V_mid1');
+save('Vsing_mid2.mat','V_mid2');
+save('Vsing_low.mat','V_low');
 
 % clc;clear;
 % 
