@@ -1,4 +1,4 @@
-function [P,R,Dc] = build_2lvl_method_g5_comp(Df,dof_f,dof_c,aggr_nr_sites)
+function [P,R,Dc] = build_2lvl_method_g5_comp(Df,dof_f,dof_c,aggr_nr_sites,g5)
 
   dof_aggr_f = dof_f*aggr_nr_sites;
   nr_aggrs = size(Df,1)/dof_aggr_f;
@@ -12,18 +12,22 @@ function [P,R,Dc] = build_2lvl_method_g5_comp(Df,dof_f,dof_c,aggr_nr_sites)
 
   fprintf("\teigensolving ...\n");
   if size(Df,1)==(16*16*16*16*12)
-    load matrices/D16/V_top.mat;
-    load matrices/D16/V_mid1.mat;
-    load matrices/D16/V_mid2.mat;
-    load matrices/D16/V_low.mat;
-    ni = size(V_top,1);
-    V = ones(4*ni,ntv);
-    V(1:ni,:) = V_top(:,1:ntv);
-    V(ni+1:2*ni,:) = V_mid1(:,1:ntv);
-    V(2*ni+1:3*ni,:) = V_mid2(:,1:ntv);
-    V(3*ni+1:4*ni,:) = V_low(:,1:ntv);
+
+    load matrices/D16/Vsing.mat;
+    V = Vsing(:,1:ntv);
+
+%     load matrices/D16/V_top.mat;
+%     load matrices/D16/V_mid1.mat;
+%     load matrices/D16/V_mid2.mat;
+%     load matrices/D16/V_low.mat;
+%     ni = size(V_top,1);
+%     V = ones(4*ni,ntv);
+%     V(1:ni,:) = V_top(:,1:ntv);
+%     V(ni+1:2*ni,:) = V_mid1(:,1:ntv);
+%     V(2*ni+1:3*ni,:) = V_mid2(:,1:ntv);
+%     V(3*ni+1:4*ni,:) = V_low(:,1:ntv);
   else
-    [V,~,~] = eigs(Df,ntv,"smallestabs",'Tolerance',1.0e-4);
+    [V,~,~] = eigs(g5*Df,ntv,"smallestabs",'Tolerance',1.0e-4);
   end
   fprintf("\t... done\n");
 
@@ -46,7 +50,7 @@ function [P,R,Dc] = build_2lvl_method_g5_comp(Df,dof_f,dof_c,aggr_nr_sites)
     jbegx = 1;
     jendx = ntv;
 
-    local_proj = (I_local-g5_local)/2;
+    local_proj = (I_local+g5_local)/2;
     local_tv = V(ibeg:iend,jbegx:jendx);
     Px(ibeg:iend,jbeg:jend) = local_proj*local_tv;
 
@@ -60,7 +64,7 @@ function [P,R,Dc] = build_2lvl_method_g5_comp(Df,dof_f,dof_c,aggr_nr_sites)
     jbegx = 1;
     jendx = ntv;
 
-    local_proj = (I_local+g5_local)/2;
+    local_proj = (I_local-g5_local)/2;
     local_tv = V(ibeg:iend,jbegx:jendx);
     Px(ibeg:iend,jbeg:jend) = local_proj*local_tv;
 
@@ -74,7 +78,8 @@ function [P,R,Dc] = build_2lvl_method_g5_comp(Df,dof_f,dof_c,aggr_nr_sites)
     jbeg = 1 + (i-1)*dof_c;
     jend = i*dof_c;
 
-    [Qx,~] = qr(full(Px(ibeg:iend,jbeg:jend)),0);
+    %[Qx,~] = qr(full(Px(ibeg:iend,jbeg:jend)),0);
+    [Qx,~] = cgs(Px(ibeg:iend,jbeg:jend));
     P(ibeg:iend,jbeg:jend) = Qx;
   end
 

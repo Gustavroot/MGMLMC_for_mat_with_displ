@@ -12,7 +12,7 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
   tstart = tic;
 
   % construct operator to pass to Block Power Iteration
-  tol = 1.0e-8;
+  tol = 1.0e-4;
 
   if alg_type=="Hutch"
     % the following matrix allows using the Hermitian operators

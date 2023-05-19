@@ -1,7 +1,7 @@
 function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
 
   ests = zeros(maxiter,1);
-  variances = zeros(maxiter);
+  variances = zeros(maxiter,1);
   fprintf("(stochs solves) ");
   for i=1:maxiter
     fprintf(".");

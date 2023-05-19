@@ -16,7 +16,7 @@ function [D] = get_matrix(filename)
   D(n/3+1:2*n/3,1:n) = Dreord_mid;
   D(2*n/3+1:n,1:n) = Dreord_low;
 
-  %D = D - 0.02*speye(n);
+  D = D - 0.01*speye(n);
 
   %tic;
   %d = eigs(D,1,'smallestreal','SubspaceDimension',50,'MaxIterations',50,'Tolerance',0.1);

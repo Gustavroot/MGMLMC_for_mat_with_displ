@@ -11,8 +11,10 @@ function [V] = bpi(A,k,s,n)
   for i=1:s
     for j=1:k
       W(:,j) = A(V(:,j));
+      fprintf(".");
     end
     [V,~] = qr(W,0);
+    fprintf("\n");
   end
 
 end

@@ -12,9 +12,9 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
   % dofs : [2,8,8,...]
   dofs = zeros(nr_levels);
   dofs(1) = 12;
-  dofs(2) = 48;
+  dofs(2) = 56;
   for i=3:nr_levels
-    dofs(i) = 48;
+    dofs(i) = 56;
   end
   mgh.dof = dofs;
 
@@ -29,14 +29,15 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
   Df = D;
   mgh.D{1} = Df;
   for i=1:nr_levels-1
-    [P,R,Dc] = build_2lvl_method_g5_comp(Df,dofs(i),dofs(i+1),aggrs(i));
+
+    nr_sites = size(mgh.D{i},1)/mgh.dof(i);
+    mgh.g5{i} = kron(speye(nr_sites),blkdiag(speye(mgh.dof(i)/2),-speye(mgh.dof(i)/2)));
+
+    [P,R,Dc] = build_2lvl_method_g5_comp(Df,dofs(i),dofs(i+1),aggrs(i),mgh.g5{i});
 
     mgh.P{i} = P;
     mgh.R{i} = R;
     mgh.D{i+1} = Dc;
-
-    nr_sites = size(mgh.D{i},1)/mgh.dof(i);
-    mgh.g5{i} = kron(speye(nr_sites),blkdiag(speye(mgh.dof(i)/2),-speye(mgh.dof(i)/2)));
 
     fprintf("\tDim of matrix at level %d : %d\n",i,size(mgh.D{i},1));
     fprintf("\tNumber of nonzero of matrix at level %d : %d\n",i,nnz(mgh.D{i}));
@@ -60,6 +61,7 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
 
     Df = Dc;
   end
+
   fprintf("\tDim of matrix at level %d : %d\n",nr_levels,size(mgh.D{nr_levels},1));
   fprintf("\tNumber of nonzero of matrix at level %d : %d\n",nr_levels,nnz(mgh.D{nr_levels}));
   nr_sites = size(mgh.D{nr_levels},1)/mgh.dof(nr_levels);
