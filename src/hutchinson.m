@@ -32,6 +32,9 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
   end
   fprintf("\n");
 
+  iters = i;
+  variance = variances(i);
+
   % when using deflation, compute the trace of the small matrix
   if k>0
     W = zeros(n,k);
@@ -46,7 +49,5 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
     small_contr = 0;
   end
 
-  iters = i;
   tracex = est_trace + small_contr;
-  variance = variances(i);
 end

@@ -15,8 +15,7 @@ D = get_matrix(filename);
 % the shift on the lattice .. as we're doing here a lattice with a
 % displacement. The displacement is on the second direction, that's why
 % the 16 extra factor
-nr_displ_sites = 5*(16^3);
-%nr_displ_sites = 0;
+nr_displ_sites = 5;
 
 % multigrid hierarchy
 nr_levels = 3;
@@ -29,7 +28,7 @@ defl_type = "RSVs";
 bpi_iters = 5;
 
 % four cases, as seen in the following if statements
-CASE = 2;
+CASE = 1;
 
 %% -----------------------------------------------
 
@@ -43,13 +42,13 @@ if CASE==1
 
   fprintf("Set of numerical experiments #1 : Hutchinson, lattice without displacement\n");
 
-  k = 28;
+  k = 10;
   fprintf("\n");
   fprintf("k = %d\n",k);
   % compute the vectors used in inexact deflation
   mgh = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters);
   % compute the trace
-  [tracex,variance,~] = compute_trace(trace_type,k,mgh,alg_type,1.0e-2,100);
+  [tracex,variance,~] = compute_trace(trace_type,k,mgh,alg_type,1.0e-2,1000);
   fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
   fprintf("Variance = %f\n",variance);
 
@@ -72,13 +71,13 @@ if CASE==2
 
   %error("FIXME : MGMLMC is only computings its first level difference, and GPM is not taken into account\n");
 
-  k = 28;
+  k = 5; % 28;
   fprintf("\n");
   fprintf("k = %d\n",k);
   % compute the vectors used in inexact deflation
   mgh = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters);
   % compute the trace
-  [tracex,variance,~] = compute_trace(trace_type,k,mgh,alg_type,1.0e-2,100);
+  [tracex,variance,~] = compute_trace(trace_type,k,mgh,alg_type,1.0e-2,1000);
   fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
   fprintf("Variance = %f\n",variance);
 

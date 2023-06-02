@@ -34,25 +34,37 @@ Fxx = ( invD2 - full(mgh.P{2}*invD3*mgh.P{2}') )*Bxx;
 
 fprintf("computing eig #1\n");
 d1 = eig( Fxx'*Fxx );
+diag1 = diag(Fxx);
 fprintf("saving #1\n");
 save('d1.mat','d1');
+save('diag1.mat','diag1');
 
 fprintf("computing eig #2\n");
 d2 = eig( Exx'*Exx );
+diag2 = diag(Exx);
 fprintf("saving #2\n");
 save('d2.mat','d2');
+save('diag2.mat','diag2');
 
 fprintf("computing eig #3\n");
 d3 = eig( Dxx'*Dxx );
+diag3 = diag(Dxx);
 fprintf("saving #3\n");
 save('d3.mat','d3');
+save('diag3.mat','diag3');
 
 fprintf("computing eig #4\n");
 d4 = eig( Cxx'*Cxx );
+diag4 = diag(Cxx);
 fprintf("saving #4\n");
 save('d4.mat','d4');
+save('diag4.mat','diag4');
 
 fprintf("computing eig #5\n");
 d5 = eig( invD2'*invD2 );
+diag5 = diag(invD2);
 fprintf("saving #5\n");
 save('d5.mat','d5');
+save('diag5.mat','diag5');
+
+exit;
