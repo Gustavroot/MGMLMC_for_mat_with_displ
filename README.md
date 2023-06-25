@@ -1,4 +1,4 @@
-# MGMLMC for a matrix with a displacement - particular case of Schwinger (1+1)-D
+# MGMLMC for a matrix with a displacement
 
 ## Installation
 
