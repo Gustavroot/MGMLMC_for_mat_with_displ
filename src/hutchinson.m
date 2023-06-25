@@ -26,9 +26,7 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
     var_buff = var_buff.^2;
     variances(i) = sum(var_buff)/i;
 
-    fprintf("latest variance = %f\n",variances(i));
-
-    % TODO : implement stop based on tolerance
+    %fprintf("latest variance = %f\n",variances(i));
   end
   fprintf("\n");
 

@@ -14,7 +14,6 @@ function [V] = bpi(A,k,s,n)
       fprintf(".");
     end
     [V,~] = qr(W,0);
-    fprintf("\n");
   end
 
 end

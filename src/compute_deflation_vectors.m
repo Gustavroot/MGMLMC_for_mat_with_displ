@@ -45,7 +45,7 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
       % only first level-difference for now
       break;
     end
-    fprintf("Construction of deflation vectors under construction.\n");
+    %fprintf("Construction of deflation vectors under construction.\n");
   end
   tend = toc(tstart);
   fprintf("... done (elapsed time = %f)\n",tend);
