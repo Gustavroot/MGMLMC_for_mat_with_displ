@@ -1,5 +1,7 @@
 function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
 
+  %global do_3D_traces;
+
   t_start = tic;
 
   mgh = struct("P",{{}},"R",{{}},"D",{{}},"g5",{{}}, ...

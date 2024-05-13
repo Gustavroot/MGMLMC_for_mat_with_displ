@@ -13,20 +13,24 @@ LASTN = maxNumCompThreads(1);
 % the shift on the lattice .. as we're doing here a lattice with a
 % displacement. The displacement is on the second direction, that's why
 % the 16 extra factor
-nr_displ_sites = 5;
+nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
 bpi_iters = 5;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
-CASE = 2;
+CASE = 1;
 % for CASE=2, choose the level to compute the variance of
 level_nr = 2;
 % number of deflation vectors
 k = 0;
 % size of the sample to use to estimate the variance
-sample_size = 5;
+sample_size = 10;
 if CASE==2 && level_nr>1 && k>0
   error("Still in the process of figuring out k>0 for MGMLMC in coarser levels ...\n");
 end
+% set global param indicating whether we're dealing with
+% 3D traces (within FOR5269) or not
+global do_3D_traces;
+do_3D_traces = 1;
 
 %%
 % DO NOT CHANGE
