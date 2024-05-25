@@ -32,6 +32,11 @@ end
 global do_3D_traces;
 do_3D_traces = 1;
 
+if do_3D_traces==1 && nr_displ_sites>0
+  error("We have disabled displacements in the lattice when computing ..." + ...
+      "3D traces, for now, but this can be easily re-introduced\n")
+end
+
 %%
 % DO NOT CHANGE
 
