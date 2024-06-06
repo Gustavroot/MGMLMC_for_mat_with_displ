@@ -30,10 +30,7 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
       
       % compute the variance
       if k>0
-        if do_3D_traces==1
-          error("Deflated Hutchinson with 3D traces is still under construction\n");
-        end
-        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1));
+        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,rand_vec_size);
       else
         [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,rand_vec_size);
       end

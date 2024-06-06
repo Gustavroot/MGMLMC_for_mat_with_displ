@@ -19,11 +19,11 @@ bpi_iters = 5;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
 CASE = 1;
 % for CASE=2, choose the level to compute the variance of
-level_nr = 2;
+level_nr = 1;
 % number of deflation vectors
-k = 0;
+k = 5;
 % size of the sample to use to estimate the variance
-sample_size = 10;
+sample_size = 5;
 if CASE==2 && level_nr>1 && k>0
   error("Still in the process of figuring out k>0 for MGMLMC in coarser levels ...\n");
 end
@@ -36,6 +36,11 @@ if do_3D_traces==1 && nr_displ_sites>0
   error("We have disabled displacements in the lattice when computing ..." + ...
       "3D traces, for now, but this can be easily re-introduced\n")
 end
+
+% IMPORTANT : this is a set-able parameter that needs to be included soon,
+%             which at the moment we assume as 1 i.e. P3D corresponds to
+%             t=1
+%t = 1;
 
 %%
 % DO NOT CHANGE
