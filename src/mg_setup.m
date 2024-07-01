@@ -102,7 +102,7 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
     if i<length(mgh.D)
       mgh.invD{i} = 0;
     else
-      mgh.invD{i} = inv(mgh.D{i});
+      mgh.invD{i} = inv(full(mgh.D{i}));
     end
   end
 
