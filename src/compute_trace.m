@@ -51,6 +51,7 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
     fprintf("... done (elapsed time = %f)\n",tend);
 
   else
+  
     B = @(cx) B_mgmlmc(cx,mgh,level_nr);
 
     fprintf("Computing trace ...\n");
@@ -60,13 +61,10 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
 
     if alg_type=="Hutch"
       % handle for the operator to pass to Hutchinson
-      A = @(bx) pgmres((mgh.GPM{1}'*(mgh.Ptilde{1}*(mgh.GPM{1}*bx))),mgh,1,solver_tol);
+      A = @(bx) pgmres((mgh.GPM{1}*(mgh.Ptilde{1}*(mgh.GPM{1}'*bx))),mgh,1,solver_tol);
       
       % compute the variance
       if k>0
-        if do_3D_traces==1
-          error("Deflated Hutchinson with 3D traces is still under construction\n");
-        end
         [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1));
       else
         [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{1},1));
