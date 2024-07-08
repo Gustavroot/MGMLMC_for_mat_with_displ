@@ -70,19 +70,26 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
         [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{1},1));
       end
     elseif alg_type=="mgmlmc"
-      % handle for the operator to pass to Hutchinson
-      if level_nr==length(mgh.D)-1
-        A = @(bx) ( pgmres(B(bx),mgh,level_nr,solver_tol) - ...
-                    mgh.P{level_nr}*mgh.invD{level_nr+1}*(mgh.R{level_nr}*B(bx)));
+      if level_nr==length(mgh.D)
+        tracex = trace(mgh.invD{level_nr});
+        variance = 0.0;
+        iters = 0;
       else
-        A = @(bx) ( pgmres(B(bx),mgh,level_nr,solver_tol) - ...
-                    mgh.P{level_nr}*pgmres(mgh.R{level_nr}*B(bx),mgh,level_nr+1,solver_tol));
-      end
-      % compute the variance and trace
-      if k>0
-        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1));
-      else 
-        [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{2},1));
+        % handle for the operator to pass to Hutchinson
+        if level_nr==length(mgh.D)-1
+          A = @(bx) ( pgmres(B(bx),mgh,level_nr,solver_tol) - ...
+                      mgh.P{level_nr}*mgh.invD{level_nr+1}*(mgh.R{level_nr}*B(bx)));
+        else
+          A = @(bx) ( pgmres(B(bx),mgh,level_nr,solver_tol) - ...
+                      mgh.P{level_nr}*pgmres(mgh.R{level_nr}*B(bx),mgh,level_nr+1,solver_tol));
+        end
+        % compute the variance and trace
+        if k>0
+          error("Deflation with MGMLMC is disabled at the moment\n")
+          [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1));
+        else 
+          [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{2},1));
+        end
       end
     end
     tend = toc(tstart);

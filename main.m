@@ -23,7 +23,8 @@ bpi_iters = 5;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
 CASE = 1;
 % for CASE=2, choose the level to compute the variance of
-level_nr = 1;
+% not needed anymore
+%level_nr = 1;
 % number of deflation vectors
 k = 5;
 % size of the sample to use to estimate the variance
@@ -104,10 +105,14 @@ if CASE==2
   % compute the vectors used in inexact deflation
   mgh = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters);
   % compute the trace
-  [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size,level_nr);
-  fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
-  fprintf("Variance = %f\n",variance);
-
+  total_trace = 0.0;
+  for level_nr=1:length(mgh.D)
+    [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size,level_nr);
+    fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
+    fprintf("Variance = %f\n",variance);
+    total_trace = total_trace + tracex;
+  end
+  fprintf("Total trace = %f+i%f\n",real(total_trace),imag(total_trace));
   fprintf("\n");
 
   % when running with -nodisplay -nosplash, re-enable this exit
