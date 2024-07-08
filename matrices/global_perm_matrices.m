@@ -3,6 +3,13 @@ function [GPM] = global_perm_matrices()
   % returns the matrix which is a reordering into blocks, a-la
   % DDalphaAMG
 
+  % this is how Dreord was built:
+  % GPM = global_perm_matrices();
+  % save('GPM.mat','GPM','-v7.3');
+  % load GPM.mat
+  % load D.mat
+  % Dreord = GPM*(D*GPM');
+
   % these parameters are for a 3-level method for D16
   aggr_dim = [4,2];
   latt_dim = [16,4,2];

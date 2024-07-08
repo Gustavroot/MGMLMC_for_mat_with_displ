@@ -7,6 +7,10 @@ LASTN = maxNumCompThreads(1);
 % -- the W-cycle and smoothing iters are set in two_level_mg.m
 % -- when singular vectors are mentioned, it's of D and not D^{-1}
 
+% -- when computing 4D traces, we work with Ptilde only i.e. there's no
+%    extra 'front factor' B
+% -- when computing 3D traces, Ptilde=identity but B!=identity
+
 %%
 % CHANGEABLE PARAMS
 
@@ -32,7 +36,7 @@ end
 global do_3D_traces;
 do_3D_traces = 1;
 
-if do_3D_traces==1 && nr_displ_sites>0
+if do_3D_traces==1 && nr_displ_sites~=0
   error("We have disabled displacements in the lattice when computing ..." + ...
       "3D traces, for now, but this can be easily re-introduced\n")
 end
@@ -48,6 +52,13 @@ end
 addpath("src/");
 filename = "matrices/D16/Dreord";
 D = get_matrix(filename);
+
+% next, we construct B, which is the 'frontal factor' in 3D traces
+B = speye(size(D,1));
+if do_3D_traces~=1 && norm(B-speye(size(D,1)),'fro')/norm(speye(size(D,1)),'fro')>1.0E-15
+    error("Only accepting B=identity in 4D traces\n");
+end
+
 % multigrid hierarchy
 nr_levels = 3;
 mgh = mg_setup(D,nr_levels,nr_displ_sites);
