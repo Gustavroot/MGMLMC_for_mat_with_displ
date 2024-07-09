@@ -19,16 +19,16 @@ LASTN = maxNumCompThreads(1);
 % the 16 extra factor
 nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
-bpi_iters = 5;
+bpi_iters = 0;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
-CASE = 1;
+CASE = 2;
 % for CASE=2, choose the level to compute the variance of
 % not needed anymore
-%level_nr = 1;
+level_nr = 1;
 % number of deflation vectors
-k = 5;
+k = 0;
 % size of the sample to use to estimate the variance
-sample_size = 5;
+sample_size = 2;
 if CASE==2 && level_nr>1 && k>0
   error("Still in the process of figuring out k>0 for MGMLMC in coarser levels ...\n");
 end

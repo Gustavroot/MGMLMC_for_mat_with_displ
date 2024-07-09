@@ -35,8 +35,8 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
         [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,rand_vec_size);
       end
     elseif alg_type=="mgmlmc"
-      if level_nr==lenght(mgh.D)
-        tracex = trace(A_mgmlmc(0,P3D,mgh,0,level_nr));
+      if level_nr==length(mgh.D)
+        tracex = trace(A_mgmlmc_coarsest(0,P3D,mgh,0,level_nr));
         variance = 0.0;
         iters = 0;
       else

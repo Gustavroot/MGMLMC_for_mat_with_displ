@@ -17,10 +17,6 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
 
   if do_3D_traces==1
 
-    if alg_type~="Hutch"
-      error("Only supporting Hutchinson in combination with deflation\n");
-    end
-
     if defl_type~="RSVs"
       error("Only supporting deflation of singular vectors at the moment\n");
     end
