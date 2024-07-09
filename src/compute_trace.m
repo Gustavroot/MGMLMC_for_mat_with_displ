@@ -92,7 +92,7 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
           error("Deflation with MGMLMC is disabled at the moment\n")
           [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1));
         else 
-          [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{2},1));
+          [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{level_nr},1));
         end
       end
     end
