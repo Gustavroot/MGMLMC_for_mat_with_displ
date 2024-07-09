@@ -43,7 +43,7 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
     G5_3D = kron(speye(nr_sites_3D),blkdiag(speye(12/2),-speye(12/2)));
 
     % handle for the operator to pass to Hutchinson
-    A = @(bx) G5_3D*( P3D*( mgh.GPM{1}*( pgmres(mgh.GPM{1}'*(P3D'*bx),mgh,1,tol) ) ) );
+    A = @(bx) G5_3D*( P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) );
 
     mgh.V{1} = bpi(A,k,bpi_iters,rand_vec_size);
 
