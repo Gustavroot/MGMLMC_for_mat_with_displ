@@ -11,6 +11,12 @@ LASTN = maxNumCompThreads(1);
 %    extra 'front factor' B
 % -- when computing 3D traces, Ptilde=identity but B!=identity
 
+% Pending:
+% -- get_W(...) returns nabla_3 right now, but it should return
+%    \sum_{i} Gamma_i nabla_i
+% -- deflated Hutchinson should compute the correct singular vectors,
+%    because the operator is not G5_3D-Hermitian anymore
+
 %%
 % CHANGEABLE PARAMS
 
@@ -54,10 +60,10 @@ addpath("src/");
 filename = "matrices/D16/Dreord";
 D = get_matrix(filename);
 
-% next, we construct B, which is the 'frontal factor' in 3D traces
-B = speye(size(D,1));
-if do_3D_traces~=1 && norm(B-speye(size(D,1)),'fro')/norm(speye(size(D,1)),'fro')>1.0E-15
-    error("Only accepting B=identity in 4D traces\n");
+% next, we construct W, which is the 'frontal factor' in 3D traces
+W = speye(size(D,1));
+if do_3D_traces~=1 && norm(W-speye(size(D,1)),'fro')/norm(speye(size(D,1)),'fro')>1.0E-15
+    error("Only accepting W=identity in 4D traces\n");
 end
 
 % multigrid hierarchy
@@ -106,7 +112,7 @@ if CASE==2
   mgh = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters);
   % compute the trace
   total_trace = 0.0;
-  for level_nr=1:length(mgh.D)
+  for level_nr=1:length(mgh.D)-1
     [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size,level_nr);
     fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
     fprintf("Variance = %f\n",variance);

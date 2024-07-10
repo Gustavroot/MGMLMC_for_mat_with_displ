@@ -1,13 +1,13 @@
 function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
 
-  %global do_3D_traces;
+  global do_3D_traces;
 
   t_start = tic;
 
   mgh = struct("P",{{}},"R",{{}},"D",{{}},"g5",{{}}, ...
                "rs",{{}},"bs",{{}},"xs",{{}},"es",{{}}, ...
                "omega",{{}},"invD",{{}},"V",{{}},"Ptilde",{{}}, ...
-               "GPM",{{}});
+               "GPM",{{}}, "W",{{}});
 
   fprintf("Constructing MG hierarchy ...\n")
 
@@ -112,6 +112,12 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
   fprintf("Elapsed time : %f\n",t_end);
 
   fprintf("\n");
+
+if do_3D_traces==1
+  fprintf("Building the front factor in 3D traces ...\n");
+  mgh.W{1} = get_W();
+  fprintf("... done\n");
+end
 
   % test correctness of MG hierarchy built
   mg_tests(mgh);
