@@ -1,7 +1,10 @@
 % this function is used in case MGMLMC is chosen from within
 % compute_trace.m, this is when doing 3D traces
 function [ex] = A_mgmlmc(cx,P3D,mgh,solver_tol,level_nr)
-  ex = cx;
+
+  % important : this function is called for 3D traces only at the moment
+
+  ex = mgh.W{1}*cx;
   ex = P3D'*ex;
   ex = mgh.GPM{1}*ex;
   

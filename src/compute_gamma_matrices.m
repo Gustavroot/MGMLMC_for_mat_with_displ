@@ -1,8 +1,6 @@
 % construction of gama matrices at finest level
 function mgh = compute_gamma_matrices(mgh)
 
-  %i=sqrt(-1);
-
   block_size = 12/4;
   I = speye(block_size);
   zero = sparse(block_size,block_size);

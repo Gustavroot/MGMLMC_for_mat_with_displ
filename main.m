@@ -25,18 +25,20 @@ LASTN = maxNumCompThreads(1);
 % the 16 extra factor
 nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
-bpi_iters = 0;
+bpi_iters = 20;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
 CASE = 1;
 % for CASE=2, choose the level to compute the variance of
 % not needed anymore
 level_nr = 1;
 % number of deflation vectors
-k = 0;
+k = 16;
 % size of the sample to use to estimate the variance
-sample_size = 2;
-if CASE==2 && level_nr>1 && k>0
-  error("Still in the process of figuring out k>0 for MGMLMC in coarser levels ...\n");
+sample_size = 100;
+%if CASE==2 && level_nr>1 && k>0
+% disabling deflated MGMLMC completely
+if CASE==2 && k>0
+  error("Deflated MGMLMC has been disabled completely for now\n");
 end
 % set global param indicating whether we're dealing with
 % 3D traces (within FOR5269) or not
@@ -60,25 +62,9 @@ addpath("src/");
 filename = "matrices/D16/Dreord";
 D = get_matrix(filename);
 
-% next, we construct W, which is the 'frontal factor' in 3D traces
-W = speye(size(D,1));
-if do_3D_traces~=1 && norm(W-speye(size(D,1)),'fro')/norm(speye(size(D,1)),'fro')>1.0E-15
-    error("Only accepting W=identity in 4D traces\n");
-end
-
 % multigrid hierarchy
 nr_levels = 3;
 mgh = mg_setup(D,nr_levels,nr_displ_sites);
-
-
-% dim4D = nthroot( size(mgh.D{1},1)/12,4 );
-% rand_vec_size = size(mgh.D{1},1)/dim4D;
-% %solver_tol = 1.0e-8;
-% nr_sites_3D = rand_vec_size/12;
-% G5_3D = kron(speye(nr_sites_3D),blkdiag(speye(12/2),-speye(12/2)));
-
-herm_norm = norm(mgh.W{1}'*mgh.W{1}-speye(size(mgh.W{1},1)),'fro')/norm(speye(size(mgh.W{1},1)),'fro');
-herm_norm
 
 % options for defl_type : "EVs", "RSVs", "LSVs"
 % do not change this parameter, we're assuming always using RSVs

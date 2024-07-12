@@ -26,7 +26,7 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
 
     if alg_type=="Hutch"
       % handle for the operator to pass to Hutchinson
-      A = @(bx) P3D*( mgh.W{1}*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,solver_tol) ) ) );
+      A = @(bx) P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*(mgh.W{1}*bx)),mgh,1,solver_tol) ) );
 
       % compute the variance
       if k>0
@@ -66,7 +66,7 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
     if alg_type=="Hutch"
       % handle for the operator to pass to Hutchinson
       A = @(bx) pgmres((mgh.GPM{1}*(mgh.Ptilde{1}*(mgh.GPM{1}'*bx))),mgh,1,solver_tol);
-      
+
       % compute the variance
       if k>0
         [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1));

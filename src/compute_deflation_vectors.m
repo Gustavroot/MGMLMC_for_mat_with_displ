@@ -9,11 +9,12 @@
 function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
 
   global do_3D_traces;
-  
+
   fprintf("Constructing deflation vectors via BPI ...\n");
   tstart = tic;
 
-  tol = 1.0e-4;
+  % tolerance of the solves involved in all these calls to BPI
+  tol = 1.0e-8;
 
   if do_3D_traces==1
 
@@ -33,18 +34,23 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
     % size of random vectors in Hutchinson
     rand_vec_size = size(mgh.D{1},1)/dim4D;
 
-    %solver_tol = 1.0e-8;
-
     nr_sites_3D = rand_vec_size/12;
     G5_3D = kron(speye(nr_sites_3D),blkdiag(speye(12/2),-speye(12/2)));
 
-    herm_norm = norm(mgh.W{1}'-mgh.W{1},'fro')/norm(mgh.W{1},'fro');
+    % check if mgh.W{1} is unitary
+    herm_norm = norm(mgh.W{1}'*mgh.W{1}-speye(size(mgh.W{1},1)),'fro')/norm(speye(size(mgh.W{1},1)),'fro');
 
+    % if mgh.W{1} is unitary, then we can use a G5_3D-Hermitian operator
+    % for the SVD extraction
     if herm_norm<1.0e-15
-      A = @(bx) G5_3D*( P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) );
+      A = @(bx) ( P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) )*G5_3D;
     else
-      % handle for the operator to pass to Hutchinson
-      A = @(bx) G5_3D*( P3D*( mgh.W{1}*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) ) );
+      % handle for the operator to pass to BPI
+      Ax  = @(bx) P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*(mgh.W{1}*bx)),mgh,1,tol) ) );
+      AxH = @(bx) mgh.W{1}'*( P3D*( mgh.GPM{1}'*( mgh.g5{1}*( pgmres(mgh.g5{1}*(mgh.GPM{1}*(P3D'*bx)),mgh,1,tol) ) ) ) );
+      % we pass this operator because we want singular vectors to deflate
+      % from the left
+      A   = @(bx) Ax(AxH(bx));
     end
 
     mgh.V{1} = bpi(A,k,bpi_iters,rand_vec_size);

@@ -4,63 +4,17 @@ function [W] = get_W(mgh)
   % Set up the lattice geometry,
   L = 16;
   T = 16;
-  %Nc = 3;
-  %Ns = 4;
-  %N = L*L*L*Nc*Ns;
 
   load('matrices/D16/Us.mat');
 
-  % Fix a value of time in Matlab index convention: t = 1,2,...
+  % this should be some sort of input parameter
   t = 1;
-
-  % Select a spatial direction.
-  %k = 3;
-
-  % Create the 3D gauge covariant derivative matrix. It has spatial and color indices.
-  %D1 = deriv3d(k,t,Us,L);
-  % Visualize.
-  %figure();
-  %spy(D1);
-
-  % Create the full 3D gauge covariant derivative matrix. It has spatial, color
-  % indices and spin indices.
-  %D1f = derivFull(k,t,Us,L);
-  % Visualize.
-  %figure();
-  %spy(D1f);
-
-  % %Testing: If we move along the spin diagonal the matrices should remain the
-  % %same.
-  % hop = makeHop(L);
-  % X = 45;
-  % Y = hop(45,k);
-  % disp('All non-zero values should be equal:');
-  % err = 0;
-  % for ix = 1:L*L*L
-  %     for jx = 1:L*L*L
-  %         if jx == hop(ix,k) || jx == hop(ix,k+3)
-  %             for mu = 1:4
-  %                 for a = 1:3
-  %                     for b = 1:3
-  %                         term1 = D1f(a + 3*(mu-1) + 12*(ix-1),b + 3*(mu-1) + 12*(jx-1));
-  %                         term2 = D1(a + 3*(ix-1),b + 3*(jx-1));
-  %                         err = err + abs(term1 - term2);
-  %                     end
-  %                 end
-  %             end
-  %         end
-  %     end
-  % end
-  % disp(err);
 
   U1 = Us;
   for n = 1:5
       U2 = smearAPE(U1,L,T,0.35);
       U1 = U2;
-      %disp(n);
   end
-
-  %n = size(mgh.D{1},1);
 
   dim4D = nthroot( size(mgh.D{1},1)/12,4 );
   size3D = size(mgh.D{1},1)/dim4D;
@@ -70,8 +24,6 @@ function [W] = get_W(mgh)
   for k=1:3
     W = W + mgh.gs{k+1}*derivFull(k,t,U1,L);
   end
-
-  %W = derivFull(k,t,U1,L);
 
 end
 
