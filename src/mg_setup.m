@@ -7,7 +7,7 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
   mgh = struct("P",{{}},"R",{{}},"D",{{}},"g5",{{}}, ...
                "rs",{{}},"bs",{{}},"xs",{{}},"es",{{}}, ...
                "omega",{{}},"invD",{{}},"V",{{}},"Ptilde",{{}}, ...
-               "GPM",{{}}, "W",{{}});
+               "GPM",{{}}, "W",{{}}, "g_i",{{}});
 
   fprintf("Constructing MG hierarchy ...\n")
 
@@ -115,7 +115,8 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
 
 if do_3D_traces==1
   fprintf("Building the front factor in 3D traces ...\n");
-  mgh.W{1} = get_W();
+  mgh = compute_gamma_matrices(mgh);
+  mgh.W{1} = get_W(mgh);
   fprintf("... done\n");
 end
 

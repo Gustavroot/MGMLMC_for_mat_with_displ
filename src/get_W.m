@@ -1,4 +1,4 @@
-function [W] = get_W()
+function [W] = get_W(mgh)
 
   % Test the construction of derivative based operators.
   % Set up the lattice geometry,
@@ -12,8 +12,9 @@ function [W] = get_W()
 
   % Fix a value of time in Matlab index convention: t = 1,2,...
   t = 1;
+
   % Select a spatial direction.
-  k = 3;
+  %k = 3;
 
   % Create the 3D gauge covariant derivative matrix. It has spatial and color indices.
   %D1 = deriv3d(k,t,Us,L);
@@ -59,7 +60,18 @@ function [W] = get_W()
       %disp(n);
   end
 
-  W = derivFull(k,t,U1,L);
+  %n = size(mgh.D{1},1);
+
+  dim4D = nthroot( size(mgh.D{1},1)/12,4 );
+  size3D = size(mgh.D{1},1)/dim4D;
+  n = size3D;
+
+  W = sparse(n,n);
+  for k=1:3
+    W = W + mgh.gs{k+1}*derivFull(k,t,U1,L);
+  end
+
+  %W = derivFull(k,t,U1,L);
 
 end
 

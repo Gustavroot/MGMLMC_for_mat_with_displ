@@ -38,8 +38,14 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
     nr_sites_3D = rand_vec_size/12;
     G5_3D = kron(speye(nr_sites_3D),blkdiag(speye(12/2),-speye(12/2)));
 
-    % handle for the operator to pass to Hutchinson
-    A = @(bx) G5_3D*( P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) );
+    herm_norm = norm(mgh.W{1}'-mgh.W{1},'fro')/norm(mgh.W{1},'fro');
+
+    if herm_norm<1.0e-15
+      A = @(bx) G5_3D*( P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) );
+    else
+      % handle for the operator to pass to Hutchinson
+      A = @(bx) G5_3D*( P3D*( mgh.W{1}*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) ) );
+    end
 
     mgh.V{1} = bpi(A,k,bpi_iters,rand_vec_size);
 

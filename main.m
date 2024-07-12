@@ -27,7 +27,7 @@ nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
 bpi_iters = 0;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
-CASE = 2;
+CASE = 1;
 % for CASE=2, choose the level to compute the variance of
 % not needed anymore
 level_nr = 1;
@@ -69,6 +69,17 @@ end
 % multigrid hierarchy
 nr_levels = 3;
 mgh = mg_setup(D,nr_levels,nr_displ_sites);
+
+
+% dim4D = nthroot( size(mgh.D{1},1)/12,4 );
+% rand_vec_size = size(mgh.D{1},1)/dim4D;
+% %solver_tol = 1.0e-8;
+% nr_sites_3D = rand_vec_size/12;
+% G5_3D = kron(speye(nr_sites_3D),blkdiag(speye(12/2),-speye(12/2)));
+
+herm_norm = norm(mgh.W{1}'*mgh.W{1}-speye(size(mgh.W{1},1)),'fro')/norm(speye(size(mgh.W{1},1)),'fro');
+herm_norm
+
 % options for defl_type : "EVs", "RSVs", "LSVs"
 % do not change this parameter, we're assuming always using RSVs
 defl_type = "RSVs";
