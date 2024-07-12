@@ -31,7 +31,7 @@ k = 0;
 % Hutchinson/MGMLMC
 d = 0;
 % size of the sample to use to estimate the variance
-sample_size = 100;
+sample_size = 500;
 if CASE==2 && level_nr>1 && k>0
   error("Still in the process of figuring out k>0 for MGMLMC in coarser levels ...\n");
 end
@@ -70,7 +70,10 @@ mgh = mg_setup(D,nr_levels,nr_displ_sites);
 % do not change this parameter, we're assuming always using RSVs
 defl_type = "RSVs";
 %% -----------------------------------------------
-
+fileID = fopen('variance_vs_numcolors_analysis.csv', 'w');
+fprintf(fileID, 'num_colors, sample_size, coloring distance, trace, variance lv 1, variance lv 2\n');
+for d = 0:5
+    sample_size = 500;
 if CASE==1
   % use Hutchinson
   % options for algorithm : "Hutch", "mgmlmc"
@@ -83,10 +86,18 @@ if CASE==1
   
   if d > 0
     colors = graph_coloring(mgh, 1, d);
+    num_colors = max(colors);
   else
     %we have to define colors like this because, inside compute_trace.m, we
     %pass colors{level_nr} to hutchinson.m
     colors = cell(nr_levels,1);
+    num_colors = 1;
+  end
+  
+  if sample_size/num_colors - fix(sample_size/num_colors) >= 0.5
+      sample_size = ceil(sample_size/num_colors);
+  else
+      sample_size = floor(sample_size/num_colors);
   end
   
   % compute the vectors used in inexact deflation
@@ -122,19 +133,42 @@ if CASE==2
     colors = cell(nr_levels,1);
   end
   
+  
   % compute the vectors used in inexact deflation
   mgh = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters);
   % compute the trace
   total_trace = 0.0;
+  variances = [];
   for level_nr=1:length(mgh.D)
+      sample_size = 500;
+      if d > 0 && level_nr < length(mgh.D)
+          num_colors = max(colors{level_nr});
+      else
+          num_colors = 1;
+      end
+      
+      if sample_size/num_colors - fix(sample_size/num_colors) >= 0.5
+      sample_size = ceil(sample_size/num_colors);
+  else
+      sample_size = floor(sample_size/num_colors);
+  end
+      
     [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size,level_nr,colors,d);
     fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
     fprintf("Variance = %f\n",variance);
     total_trace = total_trace + tracex;
+    variances = [variances, variance];
   end
   fprintf("Total trace = %f+i%f\n",real(total_trace),imag(total_trace));
   fprintf("\n");
-
+  
+  if length(variances) >= 2
+          fprintf(fileID, '%d, %d, %d, %f +i%f, %f, %f\n', max(colors{1}), sample_size, d, real(total_trace), imag(total_trace), variances(1), variances(2));
+      else
+          fprintf(fileID, '%d, %d, %d, %f +i%f, %f, %f\n', max(colors{1}), sample_size, d, real(total_trace), imag(total_trace), variances(1), NaN);
+      end
   % when running with -nodisplay -nosplash, re-enable this exit
   %exit;
 end
+end
+fclose(fileID);
