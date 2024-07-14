@@ -44,16 +44,31 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
     % for the SVD extraction
     if herm_norm<1.0e-15
       A = @(bx) ( P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) )*G5_3D;
+      mgh.V{1} = bpi(A,k,bpi_iters,rand_vec_size);
     else
+
       % handle for the operator to pass to BPI
-      Ax  = @(bx) P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*(mgh.W{1}*bx)),mgh,1,tol) ) );
-      AxH = @(bx) mgh.W{1}'*( P3D*( mgh.GPM{1}'*( mgh.g5{1}*( pgmres(mgh.g5{1}*(mgh.GPM{1}*(P3D'*bx)),mgh,1,tol) ) ) ) );
+      %Ax  = @(bx) P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*(mgh.W{1}*bx)),mgh,1,tol) ) );
+      %AxH = @(bx) mgh.W{1}'*( P3D*( mgh.GPM{1}'*( mgh.g5{1}*( pgmres(mgh.g5{1}*(mgh.GPM{1}*(P3D'*bx)),mgh,1,tol) ) ) ) );
       % we pass this operator because we want singular vectors to deflate
       % from the left
-      A   = @(bx) Ax(AxH(bx));
-    end
+      %A = @(bx) Ax(AxH(bx));
 
-    mgh.V{1} = bpi(A,k,bpi_iters,rand_vec_size);
+      [U,S,~,flag] = svds( @(x,tflag) A_for_svd(x,tflag,P3D,mgh,tol), ...
+                           [size(P3D,1),size(P3D,1)], k, 'largest', ...
+                           'Tolerance',1.0e-5, ...
+                           'MaxIterations',1000, ...
+                           'SubspaceDimension',60 ...
+                           );
+      mgh.V{1} = U;
+      S
+      if flag==0
+        fprintf("all the requested singular vectors (for deflation) converged!\n");
+      else
+        error("not all the requested singular vectors (for deflation) converged!\n");
+      end
+
+    end
 
   else
 

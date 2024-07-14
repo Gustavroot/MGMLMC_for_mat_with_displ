@@ -11,12 +11,6 @@ LASTN = maxNumCompThreads(1);
 %    extra 'front factor' B
 % -- when computing 3D traces, Ptilde=identity but B!=identity
 
-% Pending:
-% -- get_W(...) returns nabla_3 right now, but it should return
-%    \sum_{i} Gamma_i nabla_i
-% -- deflated Hutchinson should compute the correct singular vectors,
-%    because the operator is not G5_3D-Hermitian anymore
-
 %%
 % CHANGEABLE PARAMS
 
@@ -27,12 +21,12 @@ nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
 bpi_iters = 20;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
-CASE = 1;
+CASE = 2;
 % for CASE=2, choose the level to compute the variance of
 % not needed anymore
 level_nr = 1;
 % number of deflation vectors
-k = 16;
+k = 0;
 % size of the sample to use to estimate the variance
 sample_size = 100;
 %if CASE==2 && level_nr>1 && k>0
