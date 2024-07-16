@@ -10,7 +10,7 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
 
   global do_3D_traces;
 
-  fprintf("Constructing deflation vectors via BPI ...\n");
+  fprintf("Constructing deflation vectors ...\n");
   tstart = tic;
 
   % tolerance of the solves involved in all these calls to BPI
@@ -22,55 +22,59 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
       error("Only supporting deflation of singular vectors at the moment\n");
     end
 
-    % operator for projecting vectors from 4D to 3D
-    dim4D = nthroot( size(mgh.D{1},1)/12,4 );
-    size3D = size(mgh.D{1},1)/dim4D;
-    size4D = size(mgh.D{1},1);
-    P3D = sparse(size3D,size4D);
-    % this variable, t, should be an input parameter
-    t = 1;
-    P3D( 1:size3D,1+(t-1)*size3D:size3D+(t-1)*size3D ) = speye(size3D);
-
-    % size of random vectors in Hutchinson
-    rand_vec_size = size(mgh.D{1},1)/dim4D;
-
-    nr_sites_3D = rand_vec_size/12;
-    G5_3D = kron(speye(nr_sites_3D),blkdiag(speye(12/2),-speye(12/2)));
+    [P3D,G5_3D,~] = get_3D_params(mgh);
 
     % check if mgh.W{1} is unitary
-    herm_norm = norm(mgh.W{1}'*mgh.W{1}-speye(size(mgh.W{1},1)),'fro')/norm(speye(size(mgh.W{1},1)),'fro');
+    unit_norm = norm(mgh.W{1}'*mgh.W{1}-speye(size(mgh.W{1},1)),'fro')/...
+                norm(speye(size(mgh.W{1},1)),'fro');
 
     % if mgh.W{1} is unitary, then we can use a G5_3D-Hermitian operator
     % for the SVD extraction
-    if herm_norm<1.0e-15
-      A = @(bx) ( P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*bx),mgh,1,tol) ) ) )*G5_3D;
-      mgh.V{1} = bpi(A,k,bpi_iters,rand_vec_size);
+    if unit_norm<1.0e-15
+
+      if alg_type=="Hutch"
+        A_for_eig = @(bx) A_hutch(bx,P3D,G5_3D,mgh,tol,"3D");
+        %A = @(bx) P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*(G5_3D*bx)),mgh,1,tol) ) );
+        %mgh.V{1} = bpi(A,k,bpi_iters,rand_vec_size);
+      else
+        A_for_eig  = @(bx) A_mgmlmc(bx,P3D,G5_3D,mgh,tol,1);
+      end
+
+      % in case mgh.W{1} is unitary, use eigs
+      [X,~,flag] = eigs(A_for_eig,size(P3D,1),k,'largestabs', ...
+                        'Tolerance',1.0e-5, ...
+                        'MaxIterations',1000, ...
+                        'SubspaceDimension',60 ...
+                        );
+
     else
 
-      % handle for the operator to pass to BPI
-      %Ax  = @(bx) P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*(mgh.W{1}*bx)),mgh,1,tol) ) );
-      %AxH = @(bx) mgh.W{1}'*( P3D*( mgh.GPM{1}'*( mgh.g5{1}*( pgmres(mgh.g5{1}*(mgh.GPM{1}*(P3D'*bx)),mgh,1,tol) ) ) ) );
-      % we pass this operator because we want singular vectors to deflate
-      % from the left
-      %A = @(bx) Ax(AxH(bx));
+      if alg_type=="Hutch"
+        A = @(x,tflag) A_for_svd(x,tflag,P3D,mgh,tol);
+      else
+        % this case is called only for the first difference level
+        A = @(x,tflag) A_mgmlmc_for_svd(x,tflag,P3D,mgh,tol);
+      end
 
-      [U,S,~,flag] = svds( @(x,tflag) A_for_svd(x,tflag,P3D,mgh,tol), ...
+      % in case mgh.W{1} is non-unitary, use svds
+      [X,~,~,flag] = svds( @(x,tflag) A(x,tflag), ...
                            [size(P3D,1),size(P3D,1)], k, 'largest', ...
                            'Tolerance',1.0e-5, ...
                            'MaxIterations',1000, ...
                            'SubspaceDimension',60 ...
                            );
-      mgh.V{1} = U;
-      S
-      if flag==0
-        fprintf("all the requested singular vectors (for deflation) converged!\n");
-      else
-        error("not all the requested singular vectors (for deflation) converged!\n");
-      end
+    end
 
+    mgh.V{1} = X;
+    if flag==0
+      fprintf("all the requested singular vectors (for deflation) converged!\n");
+    else
+      error("not all the requested singular vectors (for deflation) converged!\n");
     end
 
   else
+
+    error("Refactoring of 4D deflation vectors under construction\n");
 
     if alg_type=="Hutch"
       % the following matrix allows using the Hermitian operators

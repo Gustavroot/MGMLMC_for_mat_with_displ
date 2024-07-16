@@ -117,7 +117,7 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
 if do_3D_traces==1
   fprintf("Building the front factor in 3D traces ...\n");
   mgh = compute_gamma_matrices(mgh);
-  mgh.W{1} = get_W(mgh);
+  mgh.W{1} = get_W(mgh,use_W_identity);
   fprintf("... done\n");
 end
 

@@ -19,25 +19,28 @@ LASTN = maxNumCompThreads(1);
 % the 16 extra factor
 nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
-bpi_iters = 20;
+%bpi_iters = 20;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
-CASE = 2;
+CASE = 1;
 % for CASE=2, choose the level to compute the variance of
 % not needed anymore
 level_nr = 1;
 % number of deflation vectors
-k = 0;
+k = 16;
 % size of the sample to use to estimate the variance
 sample_size = 100;
 %if CASE==2 && level_nr>1 && k>0
 % disabling deflated MGMLMC completely
-if CASE==2 && k>0
-  error("Deflated MGMLMC has been disabled completely for now\n");
-end
+% if CASE==2 && k>0
+%   error("Deflated MGMLMC has been disabled completely for now\n");
+% end
 % set global param indicating whether we're dealing with
 % 3D traces (within FOR5269) or not
 global do_3D_traces;
 do_3D_traces = 1;
+
+% this is meant for 3D traces only!
+use_W_identity = 1;
 
 if do_3D_traces==1 && nr_displ_sites~=0
   error("We have disabled displacements in the lattice when computing ..." + ...
@@ -58,7 +61,7 @@ D = get_matrix(filename);
 
 % multigrid hierarchy
 nr_levels = 3;
-mgh = mg_setup(D,nr_levels,nr_displ_sites);
+mgh = mg_setup(D,nr_levels,nr_displ_sites,use_W_identity);
 
 % options for defl_type : "EVs", "RSVs", "LSVs"
 % do not change this parameter, we're assuming always using RSVs

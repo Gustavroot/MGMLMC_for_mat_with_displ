@@ -7,17 +7,7 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
 
   if do_3D_traces==1
 
-    % operator for projecting vectors from 4D to 3D
-    dim4D = nthroot( size(mgh.D{1},1)/12,4 );
-    size3D = size(mgh.D{1},1)/dim4D;
-    size4D = size(mgh.D{1},1);
-    P3D = sparse(size3D,size4D);
-    % this variable, t, should be an input parameter
-    t = 1;
-    P3D( 1:size3D,1+(t-1)*size3D:size3D+(t-1)*size3D ) = speye(size3D);
-
-    % size of random vectors in Hutchinson
-    rand_vec_size = size(mgh.D{1},1)/dim4D;
+    [P3D,~,rand_vec_size] = get_3D_params(mgh);
 
     fprintf("Computing trace ...\n");
     tstart = tic;
@@ -26,7 +16,8 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
 
     if alg_type=="Hutch"
       % handle for the operator to pass to Hutchinson
-      A = @(bx) P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*(mgh.W{1}*bx)),mgh,1,solver_tol) ) );
+      %A = @(bx) P3D*( mgh.GPM{1}'*( pgmres(mgh.GPM{1}*(P3D'*(mgh.W{1}*bx)),mgh,1,solver_tol) ) );
+      A = @(bx) A_hutch(bx,P3D,mgh.W{1},mgh,tol,"3D");
 
       % compute the variance
       if k>0
@@ -40,12 +31,16 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
         variance = 0.0;
         iters = 0;
       else
-        A = @(cx) A_mgmlmc(cx,P3D,mgh,solver_tol,level_nr);
-        
+        A = @(bx) A_mgmlmc(bx,P3D,mgh.W{1},mgh,solver_tol,level_nr);
+
         % compute the variance and trace
         if k>0
-          error("Deflated MGMLMC with 3D traces is still under construction\n");
-          [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1));
+          % for now, only the first difference level undergoes deflation
+          if level_nr==1
+            [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,rand_vec_size);
+          else
+            [tracex,variance,iters] = hutchinson(A,0,0,tol,maxiter,rand_vec_size);
+          end
         else 
           [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,rand_vec_size);
         end
@@ -55,6 +50,8 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
     fprintf("... done (elapsed time = %f)\n",tend);
 
   else
+
+    error("Refactoring of 4D traces is under construction\n");
   
     B = @(cx) B_mgmlmc(cx,mgh,level_nr);
 

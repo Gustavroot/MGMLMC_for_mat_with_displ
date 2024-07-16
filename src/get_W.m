@@ -1,4 +1,10 @@
-function [W] = get_W(mgh)
+function [W] = get_W(mgh,use_W_identity)
+
+  if use_W_identity==1
+    [~,~,rand_vec_size] = get_3D_params(mgh);
+    W = speye(rand_vec_size);
+    return;
+  end
 
   % Test the construction of derivative based operators.
   % Set up the lattice geometry,
