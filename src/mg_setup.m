@@ -1,4 +1,4 @@
-function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
+function [mgh] = mg_setup(D,nr_levels,nr_displ_sites, use_W_identity)
 
   global do_3D_traces;
 

@@ -19,7 +19,7 @@ LASTN = maxNumCompThreads(1);
 % the 16 extra factor
 nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
-%bpi_iters = 20;
+bpi_iters = 0;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
 CASE = 1;
 % for CASE=2, choose the level to compute the variance of
