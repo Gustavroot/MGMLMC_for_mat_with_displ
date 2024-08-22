@@ -48,7 +48,23 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
     end
     tend = toc(tstart);
     fprintf("... done (elapsed time = %f)\n",tend);
+  elseif do_3D_traces==0 && alg_type=="MG-Def"
+    fprintf("Computing trace ...\n");
+    tstart = tic;
 
+    solver_tol = 1.0e-8;
+
+    A = @(bx) pgmres((mgh.GPM{1}*(mgh.Ptilde{1}*(mgh.GPM{1}'*bx))),mgh,1,solver_tol);
+    % compute the variance
+    if k>0
+        [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{1},1), alg_type, mgh);
+    else 
+        [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{1},1));
+    end
+    
+    tend = toc(tstart);
+    fprintf("... done (elapsed time = %f)\n",tend);
+      
   else
 
     error("Refactoring of 4D traces is under construction\n");

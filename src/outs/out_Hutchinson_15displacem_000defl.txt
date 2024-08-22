@@ -1,0 +1,86 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+              R2020a Update 1 (9.8.0.1359463) 64-bit (glnxa64)
+                               April 9, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Getting matrix ...
+...done
+Elapsed time : 4.716391
+
+Constructing MG hierarchy ...
+	eigensolving ...
+	... done
+	Dim of matrix at level 1 : 786432
+	Number of nonzero of matrix at level 1 : 42467328
+	eigensolving ...
+	... done
+	Dim of matrix at level 2 : 12288
+	Number of nonzero of matrix at level 2 : 5308416
+	Dim of matrix at level 3 : 768
+	Number of nonzero of matrix at level 3 : 184320
+...done
+Elapsed time : 114.058788
+
+Running tests on MG hierarchy and solver ...
+Test #1 ... [FAILED] (rel error = 1.130604e-15)
+Test #2 ... [PASSED]
+Test #3 ... [PASSED]
+Test #4 ... [FAILED] (rel error = 1.169731e-15)
+Test #5 ... [PASSED]
+Test #6 ... [FAILED] (rel eig residual = 1.516307e-14)
+Test #7 ... [PASSED]
+Test #8 ... [FAILED] (rel residual = 5.926068e-08, iters = 44, time = 3.726784)
+Test #9 ... [PASSED], number of iterations = 53, time = 79.544587
+... done
+
+Set of numerical experiments #1 : Hutchinson, lattice without displacement
+
+k = 0
+Constructing deflation vectors via BPI ...
+... done (elapsed time = 0.002070)
+Computing trace ...
+(stochs solves) .latest variance = 0.000000
+.latest variance = 1432.714639
+.latest variance = 2055.787794
+.latest variance = 3484.580937
+.latest variance = 4396.010751
+.latest variance = 11365.226530
+.latest variance = 12226.152808
+.latest variance = 10881.236894
+.latest variance = 9865.463680
+.latest variance = 9085.200823
+.latest variance = 8409.899188
+.latest variance = 8576.756767
+.latest variance = 8282.040638
+.latest variance = 8003.010959
+.latest variance = 7954.090319
+.latest variance = 7492.167715
+.latest variance = 7311.125393
+.latest variance = 8137.974022
+.latest variance = 7757.500011
+.latest variance = 7884.766503
+.latest variance = 7564.219174
+.latest variance = 8113.806882
+.latest variance = 8698.395106
+.latest variance = 8340.181011
+.latest variance = 8532.272657
+.latest variance = 9106.571676
+.latest variance = 9073.963581
+.latest variance = 8875.374123
+.latest variance = 8674.943013
+.latest variance = 8388.808979
+.latest variance = 8173.030746
+.latest variance = 8162.915859
+.latest variance = 8052.789235
+.latest variance = 7859.468160
+.latest variance = 7653.883030
+.latest variance = 7480.215084
+.latest variance = 7883.508116
+.latest variance = 7775.443262
+.latest variance = 7647.217277
+.

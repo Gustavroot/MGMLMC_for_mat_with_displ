@@ -1,0 +1,153 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+              R2020a Update 1 (9.8.0.1359463) 64-bit (glnxa64)
+                               April 9, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Getting matrix ...
+...done
+Elapsed time : 3.337000
+
+Constructing MG hierarchy ...
+        eigensolving ...
+        ... done
+        Dim of matrix at level 1 : 786432
+        Number of nonzero of matrix at level 1 : 42467328
+        eigensolving ...
+        ... done
+        Dim of matrix at level 2 : 12288
+        Number of nonzero of matrix at level 2 : 5308416
+        Dim of matrix at level 3 : 768
+        Number of nonzero of matrix at level 3 : 184320
+...done
+Elapsed time : 113.459195
+
+Running tests on MG hierarchy and solver ...
+Test #1 ... [FAILED] (rel error = 1.130604e-15)
+Test #2 ... [PASSED]
+Test #3 ... [PASSED]
+Test #4 ... [FAILED] (rel error = 1.169731e-15)
+Test #5 ... [PASSED]
+Test #6 ... [FAILED] (rel eig residual = 1.516307e-14)
+Test #7 ... [PASSED]
+Test #8 ... [FAILED] (rel residual = 5.926068e-08, iters = 44, time = 3.782294)
+Test #9 ... [PASSED], number of iterations = 53, time = 80.744120
+... done
+
+Set of numerical experiments #1 : Hutchinson, lattice without displacement
+
+k = 0
+Constructing deflation vectors via BPI ...
+... done (elapsed time = 0.002129)
+Computing trace ...
+(stochs solves) .latest variance = 0.000000
+.latest variance = 726.384497
+.latest variance = 5548.184196
+.latest variance = 4772.785238
+.latest variance = 5537.702338
+.latest variance = 6271.985655
+.latest variance = 5768.401166
+.latest variance = 5144.295732
+.latest variance = 5402.602622
+.latest variance = 5049.586459
+.latest variance = 4673.844060
+.latest variance = 5064.544561
+.latest variance = 5274.314121
+.latest variance = 6169.273328
+.latest variance = 6267.458779
+.latest variance = 5991.683191
+.latest variance = 5769.700712
+.latest variance = 6054.009977
+.latest variance = 6639.714576
+.latest variance = 7193.885189
+.latest variance = 6860.061503
+.latest variance = 6735.201271
+.latest variance = 7727.781535
+.latest variance = 7606.031654
+.latest variance = 7453.300312
+.latest variance = 8180.880997
+.latest variance = 8612.364930
+.latest variance = 8823.434311
+.latest variance = 8718.380044
+.latest variance = 8501.652913
+.latest variance = 8263.140046
+.latest variance = 8168.521829
+.latest variance = 8000.152019
+.latest variance = 7984.008700
+.latest variance = 7807.727404
+.latest variance = 7598.055405
+.latest variance = 8267.228087
+.latest variance = 8056.919787
+.latest variance = 8075.034043
+.latest variance = 8135.295119
+.latest variance = 8569.622160
+.latest variance = 8398.519146
+.latest variance = 8350.919178
+.latest variance = 8247.135117
+.latest variance = 8089.795893
+.latest variance = 7990.590423
+.latest variance = 7823.729405
+.latest variance = 7989.448151
+.latest variance = 7922.573716
+.latest variance = 8615.649624
+.latest variance = 8799.311718
+.latest variance = 8731.688753
+.latest variance = 8812.473414
+.latest variance = 8709.728123
+.latest variance = 8573.888097
+.latest variance = 9042.528463
+.latest variance = 8888.727777
+.latest variance = 9159.266539
+.latest variance = 9125.428956
+.latest variance = 9031.170280
+.latest variance = 9232.627261
+.latest variance = 9258.090517
+.latest variance = 9369.850802
+.latest variance = 9261.253389
+.latest variance = 9677.010804
+.latest variance = 10016.696791
+.latest variance = 9973.228893
+.latest variance = 9835.932803
+.latest variance = 9814.768123
+.latest variance = 9681.100674
+.latest variance = 9791.696260
+.latest variance = 9689.467633
+.latest variance = 9582.528324
+.latest variance = 9457.826167
+.latest variance = 9354.589521
+.latest variance = 9286.477608
+.latest variance = 9171.347832
+.latest variance = 9134.765595
+.latest variance = 9210.521680
+.latest variance = 9102.021387
+.latest variance = 9171.767365
+.latest variance = 9075.431098
+.latest variance = 8999.268736
+.latest variance = 9071.407659
+.latest variance = 9021.683898
+.latest variance = 8972.804249
+.latest variance = 9064.868394
+.latest variance = 9045.050857
+.latest variance = 8971.543518
+.latest variance = 9045.371924
+.latest variance = 8964.547142
+.latest variance = 8928.954593
+.latest variance = 8835.881467
+.latest variance = 8840.557297
+.latest variance = 8887.456308
+.latest variance = 8956.635319
+.latest variance = 8903.519587
+.latest variance = 8826.668655
+.latest variance = 8793.416535
+.latest variance = 8710.713408
+
+... done (elapsed time = 7830.118349)
+Trace = 71100.284351+i-19.909404
+Variance = 8710.713408
+
+Success
+

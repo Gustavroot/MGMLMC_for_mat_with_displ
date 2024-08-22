@@ -1,4 +1,4 @@
-function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
+function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n, alg_type, mgh)
 
   ests = zeros(maxiter,1);
   variances = zeros(maxiter,1);
@@ -9,14 +9,24 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
     % Rademacher vectors
     z = 2*randi([0 1],n,1)-1;
 
-    % deflation is from the left, as we're assuming using RSVs
-    if k>0
-      zdefl = z - V*(V'*z);
+    %MG-Def does deflation from the right
+    if alg_type=="MG-Def"
+      if k>0
+        ests(i) = z'*(A(z)-(mgh.P{1}*(mgh.g5{2}*...
+             (mgh.U_k*(mgh.Lambda_hat_inv*(mgh.U_k'*(mgh.R{1}*z)))))));
+      else
+        ests(i) = z'*(A(z));
+      end
+      
     else
-      zdefl = z;
+      % deflation is from the left, as we're assuming using RSVs
+      if k>0
+        zdefl = z - V*(V'*z);
+      else
+        zdefl = z;
+      end
+      ests(i) = zdefl'*(A(z));
     end
-    ests(i) = zdefl'*(A(z));
-
     % estimation of the trace
     est_trace = mean(ests(1:i));
 
@@ -26,7 +36,8 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
     var_buff = var_buff.^2;
     variances(i) = sum(var_buff)/i;
 
-    %fprintf("latest variance = %f\n",variances(i));
+    fprintf("latest variance = %f\n",variances(i));
+    fprintf("latest deflated trace = %f\n",real(est_trace));
   end
   fprintf("\n");
 
@@ -35,14 +46,22 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n)
 
   % when using deflation, compute the trace of the small matrix
   if k>0
-    W = zeros(n,k);
-    fprintf("(direct solves) ");
-    for i=1:k
-      fprintf(".");
-      W(:,i) = A(V(:,i));
+    if alg_type=="MG-Def"
+      small_contr = 0;
+      for i=1:size(mgh.U_k,2)
+        small_contr = small_contr + ...
+                      mgh.U_k(:,i)'*mgh.g5{2}*(mgh.U_k(:,i)*mgh.Lambda_hat_inv(i,i));
+      end
+    else
+      W = zeros(n,k);
+      fprintf("(direct solves) ");
+      for i=1:k
+        fprintf(".");
+        W(:,i) = A(V(:,i));
+      end
+      fprintf("\n");
+      small_contr = trace(V'*W);
     end
-    fprintf("\n");
-    small_contr = trace(V'*W);
   else
     small_contr = 0;
   end

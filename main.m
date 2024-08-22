@@ -21,14 +21,14 @@ nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
 bpi_iters = 0;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
-CASE = 1;
+CASE = 3;
 % for CASE=2, choose the level to compute the variance of
 % not needed anymore
 level_nr = 1;
 % number of deflation vectors
-k = 16;
+k = 32;
 % size of the sample to use to estimate the variance
-sample_size = 100;
+sample_size = 500;
 %if CASE==2 && level_nr>1 && k>0
 % disabling deflated MGMLMC completely
 % if CASE==2 && k>0
@@ -37,7 +37,7 @@ sample_size = 100;
 % set global param indicating whether we're dealing with
 % 3D traces (within FOR5269) or not
 global do_3D_traces;
-do_3D_traces = 1;
+do_3D_traces = 0;
 
 % this is meant for 3D traces only!
 use_W_identity = 1;
@@ -45,6 +45,10 @@ use_W_identity = 1;
 if do_3D_traces==1 && nr_displ_sites~=0
   error("We have disabled displacements in the lattice when computing ..." + ...
       "3D traces, for now, but this can be easily re-introduced\n")
+end
+
+if (do_3D_traces==1||nr_displ_sites~=0) && CASE==3
+  error("Multigrid deflation implemented for 3D traces and no permutations for now\n")
 end
 
 % IMPORTANT : this is a set-able parameter that needs to be included soon,
@@ -113,6 +117,31 @@ if CASE==2
     total_trace = total_trace + tracex;
   end
   fprintf("Total trace = %f+i%f\n",real(total_trace),imag(total_trace));
+  fprintf("\n");
+
+  % when running with -nodisplay -nosplash, re-enable this exit
+  %exit;
+end
+
+%% -----------------------------------------------
+
+if CASE==3
+  % use MG-Deflation
+  % options for algorithm : "Hutch", "mgmlmc", "MG-Def"
+  alg_type = "MG-Def";
+
+  fprintf("Case #3 : MG-Def\n");
+
+  fprintf("\n");
+  fprintf("k = %d\n",k);
+  % compute the vectors used in inexact deflation
+  mgh = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters);
+  % compute the trace
+  %%
+  [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size);
+  fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
+  fprintf("Variance = %f\n",variance);
+  
   fprintf("\n");
 
   % when running with -nodisplay -nosplash, re-enable this exit
