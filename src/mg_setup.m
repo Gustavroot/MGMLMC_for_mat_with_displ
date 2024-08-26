@@ -1,11 +1,13 @@
-function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
+function [mgh] = mg_setup(D,nr_levels,nr_displ_sites, use_W_identity)
+
+  global do_3D_traces;
 
   t_start = tic;
 
   mgh = struct("P",{{}},"R",{{}},"D",{{}},"g5",{{}}, ...
                "rs",{{}},"bs",{{}},"xs",{{}},"es",{{}}, ...
                "omega",{{}},"invD",{{}},"V",{{}},"Ptilde",{{}}, ...
-               "GPM",{{}});
+               "GPM",{{}}, "W",{{}}, "gs",{{}});
 
   fprintf("Constructing MG hierarchy ...\n")
 
@@ -100,7 +102,7 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
     if i<length(mgh.D)
       mgh.invD{i} = 0;
     else
-      mgh.invD{i} = inv(mgh.D{i});
+      mgh.invD{i} = inv(full(mgh.D{i}));
     end
   end
 
@@ -110,6 +112,14 @@ function [mgh] = mg_setup(D,nr_levels,nr_displ_sites)
   fprintf("Elapsed time : %f\n",t_end);
 
   fprintf("\n");
+
+% next, we construct W, which is the 'frontal factor' in 3D traces
+if do_3D_traces==1
+  fprintf("Building the front factor in 3D traces ...\n");
+  mgh = compute_gamma_matrices(mgh);
+  mgh.W{1} = get_W(mgh,use_W_identity);
+  fprintf("... done\n");
+end
 
   % test correctness of MG hierarchy built
   mg_tests(mgh);
