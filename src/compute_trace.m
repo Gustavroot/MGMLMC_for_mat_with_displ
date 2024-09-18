@@ -30,7 +30,7 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
       
       % compute the variance
       if k>0
-        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr),d;
+        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr,d);
       else
         [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr,d);
       end

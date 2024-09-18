@@ -21,7 +21,7 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n,colors,level_n
   
   tracex = 0.0;
   variance = 0.0;
-  
+
   for j = 1:num_colors
     for i=1:maxiter
         fprintf(".");
@@ -40,6 +40,7 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n,colors,level_n
         else
         zdefl = z;
         end
+
         ests(i) = zdefl'*(A(z));
 
         % estimation of the trace
@@ -53,7 +54,6 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n,colors,level_n
 
         %fprintf("latest variance = %f\n",variances(i));
     end
-  
     tracex = tracex + est_trace;
     variance = variance + variances(i);
   end

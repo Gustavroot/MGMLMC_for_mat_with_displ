@@ -19,7 +19,7 @@ LASTN = maxNumCompThreads(1);
 % the 16 extra factor
 nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
-bpi_iters = 0;
+bpi_iters = 5;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC
 CASE = 2;
 % for CASE=2, choose the level to compute the variance of
@@ -29,9 +29,9 @@ level_nr = 1;
 k = 0;
 % coloring distance -> if d == 0 there is no probing -> classical
 % Hutchinson/MGMLMC
-d = 0;
+d = 1;
 % size of the sample to use to estimate the variance
-sample_size = 100;
+sample_size = 20;
 if CASE==2 && level_nr>1 && k>0
   error("Still in the process of figuring out k>0 for MGMLMC in coarser levels ...\n");
 end
@@ -82,7 +82,7 @@ if CASE==1
   fprintf("k = %d\n",k);
   
   if d > 0
-    colors = graph_coloring(mgh, 1, d);
+    colors = graph_coloring(mgh, 2, d);
   else
     %we have to define colors like this because, inside compute_trace.m, we
     %pass colors{level_nr} to hutchinson.m
@@ -127,9 +127,11 @@ if CASE==2
   % compute the trace
   total_trace = 0.0;
   for level_nr=1:length(mgh.D)
-    [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size,level_nr,colors,d);
+    cost = 0.0;
+    [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size,level_nr,colors,d,cost);
     fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
     fprintf("Variance = %f\n",variance);
+    fprintf("Cost per sample at level %d = .12%f\n",level_nr, cost);
     total_trace = total_trace + tracex;
   end
   fprintf("Total trace = %f+i%f\n",real(total_trace),imag(total_trace));
