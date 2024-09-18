@@ -75,13 +75,12 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
   elseif do_3D_traces==0 && alg_type=="MG-Def"
 
     Q= full(mgh.g5{2}*mgh.D{2});
-    [mgh.V{2}, mgh.Lambda{2}] = eigs(Q, k, 'smallestabs', 'Tolerance', 1e-2,'SubspaceDimension', 2*k, 'MaxIterations', 1000, 'Display', 1);
-    mgh.U{2} = mgh.g5{2}*mgh.V{2}*sign(mgh.Lambda{2});  
+    [mgh.V{2}, mgh.Lambda{2}] = eigs(Q, k, 'smallestabs', 'Tolerance', 1e-2,'SubspaceDimension', 2*k, 'MaxIterations', 1000, 'Display', 1); 
     %Factorization to simplify calculations
-    B = (mgh.U{2}'*mgh.D{2})*(mgh.g5{2}*mgh.U{2});
+    B = (mgh.V{2}'*mgh.D{2})*(mgh.g5{2}*mgh.V{2});
     [mgh.U_hat,mgh.Lambda_hat_inv] = eig(B);
     mgh.Lambda_hat_inv = inv(mgh.Lambda_hat_inv);
-    mgh.U_k = mgh.U{2}* mgh.U_hat;
+    mgh.U_k = mgh.V{2}* mgh.U_hat;
       
   else
 
