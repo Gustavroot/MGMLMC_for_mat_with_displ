@@ -34,15 +34,25 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n,colors,level_n
             z = 2*randi([0 1],n,1)-1;
         end
     
-        % deflation is from the left, as we're assuming using RSVs
-        if k>0
-        zdefl = z - V*(V'*z);
+        
+        %MG-Def does deflation from the right
+        if alg_type=="MG-Def"
+            if k>0
+                ests(i) = z'*(A(z)-(mgh.P{1}*(mgh.g5{2}*...
+                (mgh.U_k*(mgh.Lambda_hat_inv*(mgh.U_k'*(mgh.R{1}*z)))))));
+            else
+                ests(i) = z'*(A(z));
+            end
+      
         else
-        zdefl = z;
+        % deflation is from the left, as we're assuming using RSVs
+            if k>0
+                zdefl = z - V*(V'*z);
+            else
+                zdefl = z;
+            end
+            ests(i) = zdefl'*(A(z));
         end
-
-        ests(i) = zdefl'*(A(z));
-
         % estimation of the trace
         est_trace = mean(ests(1:i));
 
