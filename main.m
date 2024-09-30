@@ -21,17 +21,17 @@ nr_displ_sites = 0;
 % number of iterations within Block Power Iteration
 bpi_iters = 5;
 % CASE=1 is Hutchinson, CASE=2 is MGMLMC, CASE = 3 is mg deflation
-CASE = 2;
+CASE = 3;
 % for CASE=2, choose the level to compute the variance of
 % not needed anymore
 level_nr = 1;
 % number of deflation vectors
-k = 0;
+k = 8;
 % coloring distance -> if d == 0 there is no probing -> classical
 % Hutchinson/MGMLMC
 d = 1;
 % size of the sample to use to estimate the variance
-sample_size = 20;
+sample_size = 2;
 if CASE==2 && level_nr>1 && k>0
   error("Still in the process of figuring out k>0 for MGMLMC in coarser levels ...\n");
 end
@@ -127,11 +127,9 @@ if CASE==2
   % compute the trace
   total_trace = 0.0;
   for level_nr=1:length(mgh.D)
-    cost = 0.0;
-    [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size,level_nr,colors,d,cost);
+    [tracex,variance,~] = compute_trace(k,mgh,alg_type,1.0e-2,sample_size,level_nr,colors,d);
     fprintf("Trace = %f+i%f\n",real(tracex),imag(tracex));
     fprintf("Variance = %f\n",variance);
-    fprintf("Cost per sample at level %d = .12%f\n",level_nr, cost);
     total_trace = total_trace + tracex;
   end
   fprintf("Total trace = %f+i%f\n",real(total_trace),imag(total_trace));

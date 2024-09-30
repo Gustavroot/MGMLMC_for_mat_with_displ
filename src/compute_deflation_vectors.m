@@ -81,6 +81,7 @@ function [mgh] = compute_deflation_vectors(defl_type,k,mgh,alg_type,bpi_iters)
     [mgh.U_hat,mgh.Lambda_hat_inv] = eig(B);
     mgh.Lambda_hat_inv = inv(mgh.Lambda_hat_inv);
     mgh.U_k = mgh.V{2}* mgh.U_hat;
+    mgh.V{1} = mgh.P{1}*mgh.V{2};
       
   else
 

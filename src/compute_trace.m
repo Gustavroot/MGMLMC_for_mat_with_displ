@@ -30,9 +30,9 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
       
       % compute the variance
       if k>0
-        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr,d);
+        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr,d,alg_type,mgh);
       else
-        [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr,d);
+        [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr,d,alg_type,mgh);
       end
     elseif alg_type=="mgmlmc"
       if level_nr==length(mgh.D)
@@ -45,9 +45,9 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
         % compute the variance and trace
         if k>0
           error("Deflated MGMLMC with 3D traces is still under construction\n");
-          [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1),colors{level_nr},level_nr,d);
+          [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1),colors{level_nr},level_nr,d,alg_type,mgh);
         else 
-          [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr,d);
+          [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,rand_vec_size,colors{level_nr},level_nr,d,alg_type,mgh);
         end
       end
     end
@@ -63,15 +63,15 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
 
     solver_tol = 1.0e-8;
 
-    if alg_type=="Hutch"
+    if alg_type=="Hutch" || alg_type=="MG-Def"
       % handle for the operator to pass to Hutchinson
       A = @(bx) pgmres((mgh.GPM{1}*(mgh.Ptilde{1}*(mgh.GPM{1}'*bx))),mgh,1,solver_tol);
       
       % compute the variance
       if k>0
-        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1),colors{level_nr},level_nr,d);
+        [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1),colors{level_nr},level_nr,d,alg_type,mgh);
       else
-        [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{1},1),colors{level_nr},level_nr,d);
+        [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{1},1),colors{level_nr},level_nr,d,alg_type,mgh);
       end
     elseif alg_type=="mgmlmc"
       if level_nr==length(mgh.D)
@@ -90,9 +90,9 @@ function [tracex,variance,iters] = compute_trace(k,mgh,alg_type,tol,maxiter,leve
         % compute the variance and trace
         if k>0
           error("Deflation with MGMLMC is disabled at the moment\n")
-          [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1),colors{level_nr},level_nr,d);
+          [tracex,variance,iters] = hutchinson(A,mgh.V{1},k,tol,maxiter,size(mgh.D{1},1),colors{level_nr},level_nr,d,alg_type,mgh);
         else 
-          [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{level_nr},1),colors{level_nr},level_nr,d);
+          [tracex,variance,iters] = hutchinson(A,0,k,tol,maxiter,size(mgh.D{level_nr},1),colors{level_nr},level_nr,d,alg_type,mgh);
         end
       end
     end

@@ -1,4 +1,4 @@
-function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n,colors,level_nr,d)
+function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n,colors,level_nr,d,alg_type,mgh)
 
   ests = zeros(maxiter,1);
   variances = zeros(maxiter,1);
@@ -33,13 +33,12 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n,colors,level_n
             % Rademacher vectors
             z = 2*randi([0 1],n,1)-1;
         end
-    
-        
+   
+
         %MG-Def does deflation from the right
         if alg_type=="MG-Def"
             if k>0
-                ests(i) = z'*(A(z)-(mgh.P{1}*(mgh.g5{2}*...
-                (mgh.U_k*(mgh.Lambda_hat_inv*(mgh.U_k'*(mgh.R{1}*z)))))));
+                ests(i) = z'*(A(z)-(mgh.P{1}*(mgh.g5{2}*(mgh.U_k*(mgh.Lambda_hat_inv*(mgh.U_k'*(mgh.R{1}*z)))))));
             else
                 ests(i) = z'*(A(z));
             end
@@ -87,3 +86,4 @@ function [tracex,variance,iters] = hutchinson(A,V,k,tol,maxiter,n,colors,level_n
 
   tracex = tracex + small_contr;
 end
+
